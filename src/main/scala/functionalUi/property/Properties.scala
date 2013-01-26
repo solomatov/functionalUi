@@ -86,4 +86,8 @@ object Properties {
       }
     }
   }
+
+  def apThroughSelect[X, Y](pf: ReadableProperty[X => Y], px : ReadableProperty[X]): ReadableProperty[Y] = {
+    select(pf)(f => select(px)(x => pure(f(x))))
+  }
 }
