@@ -19,7 +19,7 @@ object Properties {
 
   def lift[P1, P2, P3, R](f: (P1, P2, P3) => R)(p1: ReadableProperty[P1], p2: ReadableProperty[P2], p3: ReadableProperty[P3]): ReadableProperty[R] = ap(ap(ap(pure(f.curried), p1), p2), p3)
 
-  def pure[T](t : T) : ReadableProperty[T] = {
+  def pure[T](t: T) : ReadableProperty[T] = {
     new ReadableProperty[T] {
       def apply(): T = t
 
@@ -27,7 +27,7 @@ object Properties {
     }
   }
 
-  def ap[X, Y](f : ReadableProperty[X => Y], p : ReadableProperty[X]): ReadableProperty[Y] = {
+  def ap[X, Y](f: ReadableProperty[X => Y], p: ReadableProperty[X]): ReadableProperty[Y] = {
     new ReadableProperty[Y] {
       def apply(): Y = f()((p()))
 
