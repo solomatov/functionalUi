@@ -7,9 +7,9 @@ class ValueProperty[T] extends ReadableProperty[T] with WritableProperty[T] {
   private var myValue: T = _
   private val myListeners: ListBuffer[PropertyEvent[T] => Unit] = new ListBuffer[(PropertyEvent[T]) => Unit]
 
-  def get: T = myValue
+  def apply(): T = myValue
 
-  def set(value: T) {
+  def apply(value: T) {
     if (value == myValue) return
 
     val oldValue = myValue

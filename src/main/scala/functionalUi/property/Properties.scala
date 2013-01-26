@@ -6,7 +6,7 @@ object Properties {
   type Property[T] = AnyRef with ReadableProperty[T] with WritableProperty[T]
 
   def bind[S <: D, D](from: ReadableProperty[S], to: WritableProperty[D]): Registration = {
-    from.addListener({e => to.set(e.newValue)})
+    from.addListener({e => to(e.newValue)})
   }
 
   def bind[T](from : Property[T], to : Property[T]): Registration = {
@@ -21,7 +21,7 @@ object Properties {
 
   def pure[T](t : T) : ReadableProperty[T] = {
     new ReadableProperty[T] {
-      def get: T = t
+      def apply(): T = t
 
       def addListener(l: (PropertyEvent[T]) => Unit): Registration = Registration.EMPTY
     }
@@ -29,13 +29,13 @@ object Properties {
 
   def ap[X, Y](f : ReadableProperty[X => Y], p : ReadableProperty[X]): ReadableProperty[Y] = {
     new ReadableProperty[Y] {
-      def get: Y = f.get(p.get)
+      def apply(): Y = f()((p()))
 
       def addListener(l: (PropertyEvent[Y]) => Unit): Registration = {
-        var lastValue: Y = get
+        var lastValue: Y = this()
 
         val handler: PropertyEvent[Any] => Unit = {e =>
-          val newValue = get
+          val newValue = this()
           if (lastValue != newValue) {
             l(new PropertyEvent[Y](lastValue, newValue))
             lastValue = newValue
@@ -47,22 +47,22 @@ object Properties {
     }
   }
 
-  def select[S <: Object, D <: AnyRef](ps: ReadableProperty[S])(f: S => ReadableProperty[D]): ReadableProperty[D] = {
+  def select[S <: Object, D](ps: ReadableProperty[S])(f: S => ReadableProperty[D]): ReadableProperty[D] = {
     new ReadableProperty[D] {
       var defaultValue: D = _
 
-      def get: D = {
-        val psValue: S = ps.get
+      def apply(): D = {
+        val psValue: S = ps()
         if (psValue == null)
           defaultValue
         else
-          f(psValue).get
+          f(psValue)()
       }
 
       def addListener(l: (PropertyEvent[D]) => Unit): Registration = {
-        var lastValue: D = get
+        var lastValue: D = this()
         val onChange: () => Unit = {() =>
-          val newValue = get
+          val newValue = this()
           if (lastValue != newValue) {
             l(new PropertyEvent[D](lastValue, newValue))
             lastValue = newValue

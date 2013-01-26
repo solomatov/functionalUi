@@ -13,10 +13,10 @@ object OrderLineDemo extends App {
 
   line.subTotal.addListener(e => println("subtotal changed : " + e.oldValue + " -> " + e.newValue))
 
-  println(line.subTotal.get)
+  println(line.subTotal())
 
-  line.itemPrice.set(100)
-  line.itemCount.set(3)
+  line.itemPrice(100)
+  line.itemCount(3)
 
-  println(line.subTotal.get)
+  println(line.subTotal())
 }
