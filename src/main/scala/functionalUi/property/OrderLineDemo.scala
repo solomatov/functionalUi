@@ -11,7 +11,7 @@ object OrderLineDemo extends App {
 
   val line = new OrderLine
 
-  line.subTotal.addListener(e => println("sub total changed : " + e.oldValue + " -> " + e.newValue))
+  line.subTotal.addListener(e => println("subtotal changed : " + e.oldValue + " -> " + e.newValue))
 
   println(line.subTotal.get)
 
