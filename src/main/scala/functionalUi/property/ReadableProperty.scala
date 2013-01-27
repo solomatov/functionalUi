@@ -2,8 +2,8 @@ package functionalUi.property
 
 import functionalUi.util.Registration
 
-trait ReadableProperty[+T] {
-  def apply(): T
+trait ReadableProperty[+ValueT] {
+  def apply(): ValueT
 
-  def addListener(l: PropertyEvent[T] => Unit): Registration
+  def addListener(l: PropertyEvent[ValueT] => Unit): Registration
 }

@@ -3,24 +3,24 @@ package functionalUi.property
 import functionalUi.util.Registration
 import collection.mutable.ListBuffer
 
-class ValueProperty[T] extends ReadableProperty[T] with WritableProperty[T] {
-  private var myValue: T = _
-  private val myListeners: ListBuffer[PropertyEvent[T] => Unit] = new ListBuffer[(PropertyEvent[T]) => Unit]
+class ValueProperty[ValueT] extends ReadableProperty[ValueT] with WritableProperty[ValueT] {
+  private var myValue: ValueT = _
+  private val myListeners: ListBuffer[PropertyEvent[ValueT] => Unit] = new ListBuffer[(PropertyEvent[ValueT]) => Unit]
 
-  def apply(): T = myValue
+  def apply(): ValueT = myValue
 
-  def apply(value: T) {
+  def apply(value: ValueT) {
     if (value == myValue) return
 
     val oldValue = myValue
     myValue = value
 
     for (l <- myListeners) {
-      l(new PropertyEvent[T](oldValue, myValue))
+      l(new PropertyEvent[ValueT](oldValue, myValue))
     }
   }
 
-  def addListener(l: (PropertyEvent[T]) => Unit): Registration = {
+  def addListener(l: (PropertyEvent[ValueT]) => Unit): Registration = {
     myListeners += l
     new Registration {
       def remove() {

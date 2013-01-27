@@ -1,5 +1,5 @@
 package functionalUi.property
 
-trait WritableProperty[-T] {
-  def apply(value: T)
+trait WritableProperty[-ValueT] {
+  def apply(value: ValueT)
 }
